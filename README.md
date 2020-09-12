@@ -32,3 +32,8 @@ This is a proof of concept of how to start a server that will take input and dis
 - [ ] Encapsulated having to run the server manually and have python handle that (multithreading or multiprocessing, not too sure which)
 - [ ] Better documentation
 - [ ] Unit tests
+
+## External Links
+
+- [Reuse sockets](https://stackoverflow.com/questions/5875177/how-to-close-a-socket-left-open-by-a-killed-program)
+- [Basic skeleton code](https://www.geeksforgeeks.org/socket-programming-python/)
