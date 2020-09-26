@@ -30,6 +30,7 @@ This is a proof of concept of how to start a server that will take input and dis
 - [ ] Send data from client to sever (it is vice versa right now)
 - [ ] Make it more user friendly
 - [ ] Encapsulated having to run the server manually and have python handle that (multithreading or multiprocessing, not too sure which)
+- [ ] Flask application to have more rigidity (for proper route handling)
 - [ ] Better documentation
 - [ ] Unit tests
 
