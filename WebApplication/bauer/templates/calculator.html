@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+		<form method="POST" action="">
+			{{ ingestor.hidden_tag() }}
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4">Reverse Polish Notation Calculator</legend>
+				<div class="form-group">
+					{{ ingestor.expression_.label(class="form-control-label") }}	
+					{{ ingestor.expression_(class="form-control form-control-lg") }}	
+				</div>
+			</fieldset>
+			<div class="form-group">
+				{{ ingestor.submit(class="btn btn-outline-info") }}
+			</div>
+
+		</form>
+	</div>
+{% endblock content %}

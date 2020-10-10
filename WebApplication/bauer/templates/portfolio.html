@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+  .bottom-one {
+     margin-bottom: 0.5cm;
+  }
+</style>
+
+{% for PortfolioItem in PortfolioItems %}
+
+<article class="media content-section">
+  <div class="media-body">
+    <h2><a class="article-title" href="{{ PortfolioItem.src_link }}">{{ PortfolioItem.title_ }}</a></h2>
+    <p class="article-content">{{ PortfolioItem.content }}</p>
+    <img src="{{ PortfolioItem.image_path }}", width=480, height=300></img>
+    <div class="article-metadata">
+    <p class="bottom-one"></p>
+    </div>
+    <ul>
+    <li><a class="project-link" href="{{ PortfolioItem.demo_link }}">Demo</a>
+    <li><a class="project-link" href="{{ PortfolioItem.doc_link }}">Documentation</a>
+    <li><a class="project-link" href="{{ PortfolioItem.src_link }}">Source Code</a>
+    </ul>
+  </div>
+</article>
+
+{% endfor %}
+
+{% endblock content %}
