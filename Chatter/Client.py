@@ -7,14 +7,23 @@ Author: Jared Dyreson
 Function: Client class that can communicate with another
 """
 
-SERVER_IP = '127.0.0.1'
 
 class Client():
-    def __init__(self, name: str, port: int):
+    def __init__(self, name: str):
+        if not(isinstance(name, str)):
+            raise ValueError
+
         self.name = name
-        self.port = port
-        self.sock = socket.socket()
-        self.connection = self.sock.connect((SERVER_IP, self.port))
-    def get_message(self) -> str:
-        return self.sock.recv(1024).decode()
+        self.answer = None
+        self.is_winner = False
+
+    def get_answer(self, equation: str):
+        if not(isinstance(equation, str)):
+            raise ValueError
+
+        try:
+            return int(input(f'{self.name.upper()} --> what is {equation} ? : '))
+        except Exception as error:
+            print(f'error received: {error}')
+
 

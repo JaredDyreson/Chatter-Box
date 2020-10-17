@@ -1,31 +1,57 @@
 #!/usr/bin/env python3.8
 
 from Chatter.Client import Client
-from Chatter.Client import SERVER_IP
+from Chatter.Equations import Generator
+
 import socket
+import json
+
+SERVER_IP = "remote.belownitrogen.com"
+SERVER_PORT = 8081
 
 class Server():
-    def __init__(self, port: int, wait_time=5):
+    def __init__(self, url=SERVER_IP, port=SERVER_PORT, wait_time=15):
+        if not(isinstance(url, str) and
+               isinstance(port, int) and
+               isinstance(wait_time, int)):
+               raise ValueError
+
         self.port = port
         self.sock = socket.socket()
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.bind(('', self.port))
-        self.sock.listen(wait_time)
-        self.message = "Example text"
-    def broadcast_message(self):
-        while(True):
-            try:
-                connection, address = self.sock.accept()
-                connection.send(self.message.encode())
-                connection.close()
-            except (EOFError, KeyboardInterrupt):
-                quit()
-            except Exception:
-                print("some weird error happened")
-    def change_broadcast_message(content: str):
-        self.message = content
+        self.sock.connect((url, port))
 
-# S = Server(12345)
-# S.broadcast_message()
-# C = Client("Jared", 12345)
-# print(C.get_message())
+    def get_values(self, payload: dict, keys: list) -> tuple:
+        if not(isinstance(payload, dict) and
+               isinstance(keys, list)):
+               raise ValueError
+
+        return (payload[key] for key in keys)
+
+    def start(self, C1: Client, C2: Client):
+        if not(isinstance(C1, Client) and
+               isinstance(C2, Client)):
+               raise ValueError
+
+        G = Generator()
+        data = self.sock.recv(512)
+        payload = json.loads(data.decode("utf-8").replace("'",'"'))
+        endpoints = ["game_state", "question", "time_out", "winner"]
+        game_state, equation, time_out, winner = self.get_values(payload, endpoints)
+
+        states = G.check(C1.get_answer(equation), equation), G.check(C2.get_answer(equation), equation)
+
+        if not(any(states)):
+            print("no one got the answer")
+        else:
+            a, b = states
+            C1.is_winner, C2.is_winner = states
+            print(f'Client 1: {C1.is_winner}\nClient 2: {C2.is_winner}')
+        send_back = {
+                    'game_state': False,
+                    'question': '2+2',
+                    'time_out': 15,
+                    'winner': C1.name if C1.is_winner else C2.name
+        }
+        print(send_back)
+        self.sock.close()
