@@ -6,6 +6,10 @@ import websockets
 import base64
 import logging
 import warnings
+import random
+import functools
+from datetime import datetime
+import time
 
 logger = logging.getLogger('websockets')
 logger.setLevel(logging.INFO)
@@ -16,40 +20,54 @@ warnings.resetwarnings()
 
 connected = set()
 
-async def handler(websocket, path):
+def check(answer: int, expression: str) -> bool:
+    return (answer == eval(expression))
+
+async def handler(websocket, path, e):
     # Register.
     connected.add(websocket)
     try:
         # Implement logic here.
         await asyncio.wait([ws.send("Hello! You are connected to websocket!") for ws in connected])
-        consumer_task = asyncio.ensure_future(consumer_handler(websocket, path))
-        producer_task = asyncio.ensure_future(producer_handler(websocket, path))
-        done, pending = await asyncio.wait([consumer_task, producer_task], return_when=asyncio.FIRST_COMPLETED,)
-        for task in pending:
-            task.cancel()
+        await asyncio.wait([ws.send(f"Equation: {e}") for ws in connected])
+        consumer_task = asyncio.ensure_future(consumer_handler(websocket, path, e))
+        producer_task = asyncio.ensure_future(producer_handler(websocket, path, e))
+        done, pending = await asyncio.wait([consumer_task, producer_task], return_when=asyncio.ALL_COMPLETED,)
+        # for task in pending:
+        #     task.cancel()
     finally:
         # Unregister.
         connected.remove(websocket)
 
 
-async def producer_handler(websocket, path):
-    while True:
-        message = await producer()
-        await websocket.send(message)
+async def producer_handler(websocket, path, e):
+    message = await producer(e)
+    await websocket.send(message)
 
-async def consumer_handler(websocket, path):
+async def consumer_handler(websocket, path, e):
     async for message in websocket:
-        await consumer(message)
+        await consumer(message, e)
 
 
-async def producer():
-    return "server produced message!"
+async def producer(e):
+    return f"Answer is {eval(e)}"
 
-async def consumer(message: str):
+async def consumer(message: str, e):
     print(message)
+    await asyncio.wait([ws.send(f"{int(message) == eval(e)}") for ws in connected])
 
 
-start_server = websockets.serve(handler, "localhost", 5000)
+def equation() -> str:
+    operators = ['+', '-']
+    random.seed(datetime.now())
+    operator = random.choice(operators)
+    a = random.randint(0, 10)
+    b = random.randint(0, a)
+    return f'{a} {operator} {b}'
+
+
+bound_handler = functools.partial(handler, e = equation())
+start_server = websockets.serve(bound_handler, "localhost", 5000)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
