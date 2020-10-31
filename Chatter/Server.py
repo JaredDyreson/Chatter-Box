@@ -5,6 +5,7 @@ from Chatter.Equations import Generator
 
 import socket
 import json
+import ast
 
 SERVER_IP = "144.202.127.25"
 SERVER_PORT = 8080
@@ -35,7 +36,7 @@ class Server():
 
         G = Generator()
         data = self.sock.recv(512)
-        payload = json.loads(data.decode("utf-8").replace("'",'"'))
+        payload = ast.literal_eval(data.decode("utf-8"))
         endpoints = ["game_state", "question", "time_out", "winner"]
         game_state, equation, time_out, winner = self.get_values(payload, endpoints)
 
@@ -46,12 +47,17 @@ class Server():
         else:
             a, b = states
             C1.is_winner, C2.is_winner = states
+            declared = None
+            if(C1.is_winner):
+                declared = C1.name
+            else:
+                declared = C2.name
             print(f'Client 1: {C1.is_winner}\nClient 2: {C2.is_winner}')
         send_back = {
                     'game_state': False,
-                    'question': '2+2',
+                    'question': equation,
                     'time_out': 15,
-                    'winner': C1.name if C1.is_winner else C2.name
+                    'winner': declared
         }
         print(send_back)
         self.sock.close()
