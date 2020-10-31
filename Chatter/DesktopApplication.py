@@ -33,5 +33,7 @@ class Application():
         print(Equations.Generator().equation())
         print(self.entry.get())
 
+class Login():
+    def __init__()
 A = Application()
 A.run()

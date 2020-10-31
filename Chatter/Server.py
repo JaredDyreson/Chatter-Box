@@ -6,8 +6,8 @@ from Chatter.Equations import Generator
 import socket
 import json
 
-SERVER_IP = "remote.belownitrogen.com"
-SERVER_PORT = 8081
+SERVER_IP = "144.202.127.25"
+SERVER_PORT = 8080
 
 class Server():
     def __init__(self, url=SERVER_IP, port=SERVER_PORT, wait_time=15):
@@ -55,3 +55,4 @@ class Server():
         }
         print(send_back)
         self.sock.close()
+
