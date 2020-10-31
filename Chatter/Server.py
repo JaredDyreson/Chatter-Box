@@ -39,10 +39,10 @@ async def handler(websocket, path):
     connected.add(websocket)
     global e
     try:
+        # Implement logic here.
         await websocket.send("Hello! You are connected to websocket!")
         await websocket.send(f"Equation: {e}")
         async for message in websocket:
-        # Implement logic here.
             if(int(message) == eval(e)):
                 e = equation()
                 for ws in connected:
@@ -58,25 +58,7 @@ async def handler(websocket, path):
     finally:
         connected.remove(websocket)
 
-# async def producer_handler(websocket, path, e):
-#     message = await producer(e)
-#     await websocket.send(message)
-
-# async def consumer_handler(websocket, path, e):
-#     async for message in websocket:
-#         await consumer(message, e)
-
-
-# async def producer(e):
-#     return f"Answer is {eval(e)}"
-
-# async def consumer(message: str, e):
-#     print(message)
-#     await asyncio.wait([ws.send(f"{int(message) == eval(e)}") for ws in connected])
-
-# bound_handler = functools.partial(handler, e = equation())
-
-start_server = websockets.serve(handler, "localhost", 5000)
+start_server = websockets.serve(handler, "", 8080)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
