@@ -10,8 +10,4 @@ C2 = Client("JOHN")
 S = Server()
 S.start(C1, C2)
 
--17
-
-# G = Generator()
-# for x in range(0, 100):
-    # print(G.equation())
+ 
