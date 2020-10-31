@@ -20,42 +20,6 @@ warnings.resetwarnings()
 
 connected = set()
 
-def check(answer: int, expression: str) -> bool:
-    return (answer == eval(expression))
-
-async def handler(websocket, path, e):
-    # Register.
-    connected.add(websocket)
-    try:
-        # Implement logic here.
-        await asyncio.wait([ws.send("Hello! You are connected to websocket!") for ws in connected])
-        await asyncio.wait([ws.send(f"Equation: {e}") for ws in connected])
-        consumer_task = asyncio.ensure_future(consumer_handler(websocket, path, e))
-        producer_task = asyncio.ensure_future(producer_handler(websocket, path, e))
-        done, pending = await asyncio.wait([consumer_task, producer_task], return_when=asyncio.ALL_COMPLETED,)
-        # for task in pending:
-        #     task.cancel()
-    finally:
-        # Unregister.
-        connected.remove(websocket)
-
-
-async def producer_handler(websocket, path, e):
-    message = await producer(e)
-    await websocket.send(message)
-
-async def consumer_handler(websocket, path, e):
-    async for message in websocket:
-        await consumer(message, e)
-
-
-async def producer(e):
-    return f"Answer is {eval(e)}"
-
-async def consumer(message: str, e):
-    print(message)
-    await asyncio.wait([ws.send(f"{int(message) == eval(e)}") for ws in connected])
-
 
 def equation() -> str:
     operators = ['+', '-']
@@ -65,9 +29,54 @@ def equation() -> str:
     b = random.randint(0, a)
     return f'{a} {operator} {b}'
 
+e = equation()
 
-bound_handler = functools.partial(handler, e = equation())
-start_server = websockets.serve(bound_handler, "localhost", 5000)
+def check(answer: int, expression: str) -> bool:
+    return (answer == eval(expression))
+
+async def handler(websocket, path):
+    # Register.
+    connected.add(websocket)
+    global e
+    try:
+        await websocket.send("Hello! You are connected to websocket!")
+        await websocket.send(f"Equation: {e}")
+        async for message in websocket:
+        # Implement logic here.
+            if(int(message) == eval(e)):
+                e = equation()
+                for ws in connected:
+                    if(ws == websocket):
+                        await ws.send("You got the right Answer!")
+                    else:
+                        await ws.send("Someone got the right Answer!")
+                        
+                    await ws.send(f"New equation: {e}")
+            else:
+                await websocket.send("Incorrect Answer. Try again!")
+
+    finally:
+        connected.remove(websocket)
+
+# async def producer_handler(websocket, path, e):
+#     message = await producer(e)
+#     await websocket.send(message)
+
+# async def consumer_handler(websocket, path, e):
+#     async for message in websocket:
+#         await consumer(message, e)
+
+
+# async def producer(e):
+#     return f"Answer is {eval(e)}"
+
+# async def consumer(message: str, e):
+#     print(message)
+#     await asyncio.wait([ws.send(f"{int(message) == eval(e)}") for ws in connected])
+
+# bound_handler = functools.partial(handler, e = equation())
+
+start_server = websockets.serve(handler, "localhost", 5000)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
