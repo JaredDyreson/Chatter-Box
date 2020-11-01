@@ -1,2 +1,3 @@
 # Chatter-Box
-A chat  service written in Python
+
+Multiplayer math games using websockets
