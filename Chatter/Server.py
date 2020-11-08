@@ -23,6 +23,7 @@ class ServerPayload(object):
         self.question = question
         self.time_out = time_out
         self.winner = winner
+        self.timestamp = None
 
 logger = logging.getLogger('websockets')
 logger.setLevel(logging.INFO)
@@ -36,13 +37,10 @@ connected = set()
 
 def equation() -> str:
     operators = ['+', '-']
-    random.seed(datetime.now())
     operator = random.choice(operators)
     a = random.randint(0, 10)
     b = random.randint(0, a)
     return f'{a} {operator} {b}'
-
-e = equation()
 
 def check(answer: int, expression: str) -> bool:
     return (answer == eval(expression))
@@ -50,16 +48,16 @@ def check(answer: int, expression: str) -> bool:
 async def handler(websocket, path):
     # Register.
     connected.add(websocket)
-    global e
+    e = equation()
     try:
         # Implement logic here.
-        serverPayload = ServerPayload(game_state = False, question = e, time_out = None, winner = None)
+        serverPayload = ServerPayload(game_state = False, question = equation(), time_out = None, winner = None)
         await websocket.send(json.dumps(serverPayload.__dict__))
         async for message in websocket:
             clientPayload = ClientPayload(**json.loads(message))
             if(clientPayload.answer == eval(e)):
                 e = equation()
-                serverPayload = ServerPayload(game_state = True, question = e, time_out = None, winner = clientPayload.name)
+                serverPayload = ServerPayload(game_state = True, question = e, time_out = None, winner = clientPayload.name, time_stamp = datetime.now())
                 for ws in connected:
                     await ws.send(json.dumps(serverPayload.__dict__))
             else:
