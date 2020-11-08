@@ -25,35 +25,32 @@ class Game():
 
         return (payload[key] for key in keys)
 
-    def start(self, C1: Client, C2: Client):
-        if not(isinstance(C1, Client) and
-               isinstance(C2, Client)):
+    def start(self, manifest: list):
+        if not(isinstance(manifest, list)):
                raise ValueError
 
         data = self.connection.recv()
         payload = json.loads(data)
-        endpoints = ["game_state", "question", "time_out", "winner"]
-        game_state, equation, time_out, winner = self.get_values(payload, endpoints)
+        endpoints = ["game_state", "question", "time_out", "winner", "timestamp"]
+        game_state, equation, time_out, winner, timestamp = self.get_values(payload, endpoints)
         G = Generator()
 
-        states = G.check(C1.get_answer(equation), equation), G.check(C2.get_answer(equation), equation)
+        states = []
 
-        if not(any(states)):
-            print("no one got the answer")
-        else:
-            a, b = states
-            C1.is_winner, C2.is_winner = states
-            declared = None
-            if(C1.is_winner):
-                declared = C1.name
-            else:
-                declared = C2.name
-            print(f'Client 1: {C1.is_winner}\nClient 2: {C2.is_winner}')
+        for element in manifest:
+            time, answer = element.get_answer(equation)
+            if(G.check(answer, equation)):
+                element.timestamp = time
+                states.append(element)
+
+        states.sort(key=lambda x: x.timestamp)
+
         send_back = {
-                    'game_state': False,
-                    'question': equation,
-                    'time_out': 15,
-                    'winner': declared
+            'game_state': False,
+            'question': equation,
+            'time_out': 15,
+            'winner': None if not(states) else states[0].name
         }
+
         print(send_back)
         self.connection.close()
