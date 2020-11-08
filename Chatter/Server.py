@@ -45,19 +45,21 @@ def equation() -> str:
 def check(answer: int, expression: str) -> bool:
     return (answer == eval(expression))
 
+e = equation()
+
 async def handler(websocket, path):
     # Register.
     connected.add(websocket)
-    e = equation()
+    global e
     try:
         # Implement logic here.
-        serverPayload = ServerPayload(game_state = False, question = equation(), time_out = None, winner = None)
+        serverPayload = ServerPayload(game_state = False, question = e, time_out = None, winner = None)
         await websocket.send(json.dumps(serverPayload.__dict__))
         async for message in websocket:
             clientPayload = ClientPayload(**json.loads(message))
             if(clientPayload.answer == eval(e)):
                 e = equation()
-                serverPayload = ServerPayload(game_state = True, question = e, time_out = None, winner = clientPayload.name, time_stamp = datetime.now())
+                serverPayload = ServerPayload(game_state = True, question = e, time_out = None, winner = clientPayload.name)
                 for ws in connected:
                     await ws.send(json.dumps(serverPayload.__dict__))
             else:
