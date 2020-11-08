@@ -6,6 +6,8 @@ from Chatter.Game import Game
 
 C1 = Client("JARED")
 C2 = Client("JOHN")
-
-G = Game()
-G.start(C1, C2)
+try:
+    G = Game()
+    G.start(C1, C2)
+except ConnectionRefusedError:
+    print("[-] Server is not active, please turn it on")
