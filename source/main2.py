@@ -27,23 +27,23 @@ def send_func(message):
         print (outbound_message)
         comms_socket.send(bytes(outbound_message, "UTF-8"))
 
-def mainApp():
-        global win_count
-        global questionLabelVar
-        global wincountLabelVar
+#def mainApp():
+#        global win_count
+#        global questionLabelVar
+#        global wincountLabelVar
 
-        message = comms_socket.recv(4096).decode("UTF-8")
-        print(message) 
-        data = json.loads(message)
-
-        if (data["winner"] == user_name):
-                win_count += 1       
-
-        mystring = str(data["question"])
-        questionLabelVar.set(mystring)
-        wincountLabelVar.set("You have won " + str(win_count) + " times")
-        time.sleep(1)
-        main_window.after(1000, mainApp)
+#        message = comms_socket.recv(4096).decode("UTF-8")
+#        print(message) 
+#        data = json.loads(message)
+#
+#        if (data["winner"] == user_name):
+#                win_count += 1       
+#
+#        mystring = str(data["question"])
+#        questionLabelVar.set(mystring)
+#        wincountLabelVar.set("You have won " + str(win_count) + " times")
+#        time.sleep(1)
+#        main_window.after(1000, mainApp)
 
 print("Running Application")
 comms_socket = socket.socket()
@@ -107,7 +107,7 @@ button9.place(x = (numpadButtonWidth*2), y = numpadVerticalOffset + (numpadButto
 button0 = Button(main_window, font = numpadButtonFont, text = "0", command = lambda : send_func("0"))
 button0.place(x = numpadButtonWidth, y = numpadVerticalOffset + (numpadButtonHeight*3), width = numpadButtonWidth, height = numpadButtonHeight)
 
-main_window.after(1000, mainApp)
+#main_window.after(1000, mainApp)
 main_window.mainloop()
 #while True:
 #        main_window.mainloop()
