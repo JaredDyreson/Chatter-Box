@@ -9,6 +9,6 @@ C2 = Client("JOHN")
 
 try:
     G = Game()
-    G.start([ C1, C2 ])
+    G.start([C1])
 except ConnectionRefusedError:
     print("[-] Server is not active, please turn it on")

@@ -34,8 +34,17 @@ class Game():
         endpoints = ["game_state", "question", "time_out", "winner", "timestamp"]
         game_state, equation, time_out, winner, timestamp = self.get_values(payload, endpoints)
         G = Generator()
+        time, answer = element.get_answer(equation)
+        payload = {
 
+        }
+        self.connection.send()
+
+
+
+        #  this code should be run server side, not client side
         states = []
+
 
         for element in manifest:
             time, answer = element.get_answer(equation)
