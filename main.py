@@ -9,21 +9,33 @@ import Chatter
 
 # GLOBAL VARIABLES
 
+try:
+    G = Chatter.Game()
+except ConnectionRefusedError:
+    print("[-] Server is not active, please turn it on")
+    quit()
+
 L = Chatter.DesktopApplication.Login()
 L.run()
+
 client = Chatter.Client(L.name)
 print(f'Client created with name of {client.name}')
+
+
 win_count = 0
 
 class NumpadWindow():
-    def __init__(self, win=None):
+    def __init__(self, GameInstance : Chatter.Game):
 
         self.window_width = 470
         self.window_height = 550
 
         self.message = ""
+        self.gameInstance = GameInstance
+        self.payload = json.loads(self.gameInstance.connection.recv())
+        self.equation = self.payload["question"]
 
-        self.main_window = tkinter.Tk() if not win else win
+        self.main_window = tkinter.Tk()
 
         self.waitingMessage = tkinter.StringVar()
         self.waitingMessage.set("Waiting for the server...")
@@ -31,13 +43,15 @@ class NumpadWindow():
         self.winningCountMessage.set(f'You have won {win_count} times')
         self.currentAnswerMessage = tkinter.StringVar()
         self.currentAnswerMessage.set(f'Current answer: {self.message}')
+        self.currentEquationMessage = tkinter.StringVar()
+        self.currentEquationMessage.set(f'Current equation: {self.equation}')
 
         self.main_window.title("Math Game")
         self.main_window.resizable(width = False, height = False)
         self.main_window.configure(width = self.window_width, height = self.window_height)
 
-        self.questionLabel = tkinter.Label(self.main_window, textvariable = self.waitingMessage, font = "100")
-        self.questionLabel.place(relwidth = 1, y = 20)
+        self.waitingLabel = tkinter.Label(self.main_window, textvariable = self.waitingMessage, font = "100")
+        self.waitingLabel.place(relwidth = 1, y = 20)
 
         self.wincountLabel = tkinter.Label(self.main_window, textvariable = self.winningCountMessage, font = "100")
         self.wincountLabel.place(relwidth = 1)
@@ -45,6 +59,8 @@ class NumpadWindow():
         self.currentResponse = tkinter.Label(self.main_window, textvariable = self.currentAnswerMessage, font = "100")
         self.currentResponse.place(relwidth = 1, y = 40)
 
+        self.questionLabel = tkinter.Label(self.main_window, textvariable = self.currentEquationMessage, font = "100")
+        self.questionLabel.place(relwidth = 1, y = 60)
         # BUTTON SETTINGS
         self.numpadVerticalOffset = 100
         self.numpadButtonHeight = 50
@@ -104,5 +120,7 @@ class NumpadWindow():
         }
         dumped = json.dumps(outbound)
         print(dumped)
-N = NumpadWindow()
+        self.gameInstance.connection.send(dumped)
+
+N = NumpadWindow(G)
 N.run()
