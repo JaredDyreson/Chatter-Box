@@ -25,7 +25,7 @@ class ServerPayload(object):
         self.question = question
         self.time_out = time_out
         self.winner = winner
-        self.score_board = scores
+        self.score_board = score_board
 
 logger = logging.getLogger('websockets')
 logger.setLevel(logging.INFO)
