@@ -11,6 +11,8 @@ import functools
 from datetime import datetime
 import time
 import json
+import threading
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 class ClientPayload(object):
     def __init__(self, name, answer):
@@ -18,12 +20,12 @@ class ClientPayload(object):
         self.answer = answer
         
 class ServerPayload(object):
-    def __init__(self, game_state, question, time_out, winner):
+    def __init__(self, game_state, question, time_out, winner, score_board: {}):
         self.game_state = game_state
         self.question = question
         self.time_out = time_out
         self.winner = winner
-        self.timestamp = None
+        self.score_board = scores
 
 logger = logging.getLogger('websockets')
 logger.setLevel(logging.INFO)
@@ -32,7 +34,6 @@ os.environ['PYTHONASYNCIODEBUG'] = '1'
 logging.basicConfig(level=logging.DEBUG)
 warnings.resetwarnings()
 
-connected = set()
 
 
 def equation() -> str:
@@ -45,21 +46,51 @@ def equation() -> str:
 def check(answer: int, expression: str) -> bool:
     return (answer == eval(expression))
 
+
+connected = set()
 e = equation()
+timer = 30
+scoreBoard = {}
+winner = None
+
+
+
+async def counter():
+    global connected
+    global timer
+    global e
+    global winner
+    timer = timer - 1
+    if timer >= 0:
+        serverPayload = serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner,  score_board = scoreBoard)
+        for ws in connected:
+            await ws.send(json.dumps(serverPayload.__dict__))
+    else:
+        e = equation()
+        timer = 30
+        serverPayload = serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner,  score_board = scoreBoard)
+        for ws in connected:
+            await ws.send(json.dumps(serverPayload.__dict__))
 
 async def handler(websocket, path):
     # Register.
     connected.add(websocket)
     global e
+    global timer
+    global winner
     try:
         # Implement logic here.
-        serverPayload = ServerPayload(game_state = False, question = e, time_out = None, winner = None)
+        serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner, score_board = scoreBoard)
         await websocket.send(json.dumps(serverPayload.__dict__))
         async for message in websocket:
             clientPayload = ClientPayload(**json.loads(message))
             if(clientPayload.answer == eval(e)):
+
+                scoreBoard.update({clientPayload.name: scoreBoard.get(clientPayload.name, 0) + 1})
+                winner = clientPayload.name
                 e = equation()
-                serverPayload = ServerPayload(game_state = True, question = e, time_out = None, winner = clientPayload.name)
+                timer = 30
+                serverPayload = ServerPayload(game_state = True, question = e, time_out = timer, winner = clientPayload.name, score_board = scoreBoard)
                 for ws in connected:
                     await ws.send(json.dumps(serverPayload.__dict__))
             else:
@@ -67,10 +98,19 @@ async def handler(websocket, path):
 
     finally:
         connected.remove(websocket)
+        scoreBoard.pop(websocket)
+
+
+
 
 start_server = websockets.serve(handler, "", 8080)
 
+scheduler = AsyncIOScheduler()
+scheduler.add_job(counter, 'interval', seconds=1)
+scheduler.start()
+
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
+
 
 
