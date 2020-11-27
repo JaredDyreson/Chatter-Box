@@ -33,6 +33,7 @@ class NumpadWindow():
         self.message = ""
         self.gameInstance = GameInstance
         self.payload = json.loads(self.gameInstance.connection.recv())
+        print(self.payload)
         self.equation = self.payload["question"]
 
         self.main_window = tkinter.Tk()
@@ -72,6 +73,7 @@ class NumpadWindow():
 
         self.submit_button = tkinter.Button(self.main_window, text="Submit", command = self.send_func)
         self.delete_button = tkinter.Button(self.main_window, text="Delete", command = self.delete_last_char)
+        self.refresh_button = tkinter.Button(self.main_window, text="Refresh", command = self.refresh_screen)
 
         x_pos, y_pos = 0, 0
         for x, button in enumerate(buttons):
@@ -91,6 +93,11 @@ class NumpadWindow():
                                  height = self.numpadButtonHeight
                                 )
         self.delete_button.place(x = self.numpadButtonWidth,
+                                 y = self.numpadVerticalOffset + self.numpadButtonHeight * (y_pos + 1),
+                                 width = self.numpadButtonWidth,
+                                 height = self.numpadButtonHeight
+                                )
+        self.refresh_button.place(x = self.numpadButtonWidth + 1,
                                  y = self.numpadVerticalOffset + self.numpadButtonHeight * (y_pos + 1),
                                  width = self.numpadButtonWidth,
                                  height = self.numpadButtonHeight
@@ -121,6 +128,9 @@ class NumpadWindow():
         dumped = json.dumps(outbound)
         print(dumped)
         self.gameInstance.connection.send(dumped)
+
+    def refresh_screen(self):
+        print(self.gameInstance.connection.recv())
 
 N = NumpadWindow(G)
 N.run()
