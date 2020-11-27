@@ -13,6 +13,7 @@ import time
 import json
 import threading
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import time
 
 class ClientPayload(object):
     def __init__(self, name, answer):
@@ -85,7 +86,8 @@ async def handler(websocket, path):
         async for message in websocket:
             clientPayload = ClientPayload(**json.loads(message))
             if(clientPayload.answer == eval(e)):
-
+                print("PENIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                time.sleep(10)
                 scoreBoard.update({clientPayload.name: scoreBoard.get(clientPayload.name, 0) + 1})
                 winner = clientPayload.name
                 e = equation()
