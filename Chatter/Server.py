@@ -28,12 +28,12 @@ class ServerPayload(object):
         self.winner = winner
         self.score_board = score_board
 
-logger = logging.getLogger('websockets')
-logger.setLevel(logging.INFO)
-logger.addHandler(logging.StreamHandler())
-os.environ['PYTHONASYNCIODEBUG'] = '1'
-logging.basicConfig(level=logging.DEBUG)
-warnings.resetwarnings()
+# logger = logging.getLogger('websockets')
+# logger.setLevel(logging.INFO)
+# logger.addHandler(logging.StreamHandler())
+# os.environ['PYTHONASYNCIODEBUG'] = '1'
+# logging.basicConfig(level=logging.DEBUG)
+# warnings.resetwarnings()
 
 
 
