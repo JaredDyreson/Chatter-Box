@@ -9,7 +9,6 @@ import warnings
 import random
 import functools
 from datetime import datetime
-import time
 import json
 import threading
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -18,7 +17,10 @@ import time
 class ClientPayload(object):
     def __init__(self, name, answer):
         self.name = name
-        self.answer = answer
+        try:
+            self.answer = int(answer)
+        except ValueError:
+            raise ValueError(f'{self.answer} is not convertible to integer, stop.')
         
 class ServerPayload(object):
     def __init__(self, game_state, question, time_out, winner, score_board: {}):
@@ -84,19 +86,21 @@ async def handler(websocket, path):
         serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner, score_board = scoreBoard)
         await websocket.send(json.dumps(serverPayload.__dict__))
         async for message in websocket:
-            clientPayload = ClientPayload(**json.loads(message))
-            if(clientPayload.answer == eval(e)):
-                print("PENIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                time.sleep(10)
-                scoreBoard.update({clientPayload.name: scoreBoard.get(clientPayload.name, 0) + 1})
-                winner = clientPayload.name
-                e = equation()
-                timer = 30
-                serverPayload = ServerPayload(game_state = True, question = e, time_out = timer, winner = clientPayload.name, score_board = scoreBoard)
-                for ws in connected:
-                    await ws.send(json.dumps(serverPayload.__dict__))
-            else:
-                await websocket.send(json.dumps(serverPayload.__dict__))
+            try:
+                clientPayload = ClientPayload(**json.loads(message))
+                if(clientPayload.answer == eval(e)):
+                    scoreBoard.update({clientPayload.name: scoreBoard.get(clientPayload.name, 0) + 1})
+                    winner = clientPayload.name
+                    e = equation()
+                    timer = 30
+                    serverPayload = ServerPayload(game_state = True, question = e, time_out = timer, winner = clientPayload.name, score_board = scoreBoard)
+                    for ws in connected:
+                        await ws.send(json.dumps(serverPayload.__dict__))
+                else:
+                    await websocket.send(json.dumps(serverPayload.__dict__))
+            except json.decoder.JSONDecodeError:
+                print("you sent the wrong JSON")
+
 
     finally:
         connected.remove(websocket)
