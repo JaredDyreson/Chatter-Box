@@ -55,7 +55,7 @@ e = equation()
 timer = 30
 scoreBoard = {}
 winner = None
-
+scheduler = AsyncIOScheduler()
 
 
 async def counter():
@@ -77,6 +77,9 @@ async def counter():
 
 async def handler(websocket, path):
     # Register.
+    if len(connected) == 0:
+        scheduler.add_job(counter, 'interval', seconds=1)
+        scheduler.start()
     connected.add(websocket)
     global e
     global timer
@@ -107,15 +110,14 @@ async def handler(websocket, path):
 
     finally:
         connected.remove(websocket)
+        if len(connected) == 0:
+            scheduler.shutdown()
 
 
 
 
 start_server = websockets.serve(handler, "", 8080)
 
-scheduler = AsyncIOScheduler()
-scheduler.add_job(counter, 'interval', seconds=1)
-scheduler.start()
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
