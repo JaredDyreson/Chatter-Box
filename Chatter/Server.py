@@ -30,12 +30,12 @@ class ServerPayload(object):
         self.winner = winner
         self.score_board = score_board
 
-# logger = logging.getLogger('websockets')
-# logger.setLevel(logging.INFO)
-# logger.addHandler(logging.StreamHandler())
-# os.environ['PYTHONASYNCIODEBUG'] = '1'
-# logging.basicConfig(level=logging.DEBUG)
-# warnings.resetwarnings()
+logger = logging.getLogger('websockets')
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
+os.environ['PYTHONASYNCIODEBUG'] = '1'
+logging.basicConfig(level=logging.DEBUG)
+warnings.resetwarnings()
 
 
 
@@ -65,13 +65,13 @@ async def counter():
     global winner
     timer = timer - 1
     if timer >= 0:
-        serverPayload = serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner,  score_board = scoreBoard)
+        serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner, score_board = scoreBoard)
         for ws in connected:
             await ws.send(json.dumps(serverPayload.__dict__))
     else:
         e = equation()
         timer = 30
-        serverPayload = serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner,  score_board = scoreBoard)
+        serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner, score_board = scoreBoard)
         for ws in connected:
             await ws.send(json.dumps(serverPayload.__dict__))
 
@@ -83,6 +83,8 @@ async def handler(websocket, path):
     global winner
     try:
         # Implement logic here.
+        e = equation()
+        timer = 30
         serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner, score_board = scoreBoard)
         await websocket.send(json.dumps(serverPayload.__dict__))
         async for message in websocket:
@@ -97,6 +99,7 @@ async def handler(websocket, path):
                     for ws in connected:
                         await ws.send(json.dumps(serverPayload.__dict__))
                 else:
+                    serverPayload = ServerPayload(game_state = True, question = e, time_out = timer, winner = clientPayload.name, score_board = scoreBoard)
                     await websocket.send(json.dumps(serverPayload.__dict__))
             except json.decoder.JSONDecodeError:
                 print("you sent the wrong JSON")
@@ -104,7 +107,6 @@ async def handler(websocket, path):
 
     finally:
         connected.remove(websocket)
-        scoreBoard.pop(websocket)
 
 
 
