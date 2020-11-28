@@ -1,6 +1,7 @@
 from Chatter.Client import Client
 from Chatter.Equations import Generator
 
+import asyncio
 import websocket
 import json
 
