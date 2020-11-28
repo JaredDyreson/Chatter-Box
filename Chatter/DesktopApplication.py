@@ -10,13 +10,23 @@ import time
 import json
 import select
 
+import tkinter.font
+    
+background_color = "pink"
+button_color = "light pink"
+h1_font = "Arial"
+#text_font = tkinter.font(family='Arial', size=25)
+
+
+
 class Login():
     def __init__(self):
         self.window = tkinter.Tk()
         self.window.title("Login")
         self.window.geometry("300x300")
         self.name = None
-
+        self.window.configure(bg=background_color)
+        
         self.user_name_label = tkinter.Label(self.window, text="Username:")
         self.user_name_label.pack(side="top", padx=100, pady=100)
         self.user_name_entry = tkinter.Entry(self.window)
@@ -36,9 +46,10 @@ class Login():
 class NumpadWindow():
     def __init__(self, GameInstance, client):
 
+
         # DIMENSIONS
 
-        self.window_width = 470
+        self.window_width = 400
         self.window_height = 550
         self.win_count = 0
         self.client = client
@@ -54,6 +65,9 @@ class NumpadWindow():
         self.payload = json.loads(self.gameInstance.connection.recv())
         self.leader_board = self.payload["score_board"]
         self.equation = self.payload["question"]
+
+
+        self.main_window.configure(bg=background_color)
 
         # BACKGROUND
 
@@ -75,15 +89,19 @@ class NumpadWindow():
 
         self.waitingLabel = tkinter.Label(self.main_window, textvariable = self.timerCounter, font = "100")
         self.waitingLabel.place(relwidth = 1, y = 20)
+        self.waitingLabel.configure(bg=background_color)
 
         self.wincountLabel = tkinter.Label(self.main_window, textvariable = self.winningCountMessage, font = "100")
         self.wincountLabel.place(relwidth = 1)
+        self.wincountLabel.configure(bg=background_color)
 
         self.currentResponse = tkinter.Label(self.main_window, textvariable = self.currentAnswerMessage, font = "100")
         self.currentResponse.place(relwidth = 1, y = 40)
+        self.currentResponse.configure(bg=background_color)
 
         self.questionLabel = tkinter.Label(self.main_window, textvariable = self.currentEquationMessage, font = "100")
         self.questionLabel.place(relwidth = 1, y = 60)
+        self.questionLabel.configure(bg=background_color)
 
         # BUTTON SETTINGS
 
@@ -95,9 +113,9 @@ class NumpadWindow():
         buttons = [self.make_button(element) for element in range(1, 10)]
         buttons.append(self.make_button(0))
 
-        self.submit_button = tkinter.Button(self.main_window, text="Submit", command = self.send_func)
-        self.delete_button = tkinter.Button(self.main_window, text="Delete", command = self.delete_last_char)
-        self.refresh_button = tkinter.Button(self.main_window, text="Refresh", command = self.refresh_screen)
+        self.submit_button = tkinter.Button(self.main_window, text="Submit", bg=button_color, command = self.send_func)
+        self.delete_button = tkinter.Button(self.main_window, text="Delete", bg=button_color, command = self.delete_last_char)
+        self.refresh_button = tkinter.Button(self.main_window, text="Refresh", bg=button_color, command = self.refresh_screen)
 
         x_pos, y_pos = 0, 0
         for x, button in enumerate(buttons):
@@ -128,7 +146,8 @@ class NumpadWindow():
                                 )
 
     def make_button(self, index):
-        return tkinter.Button(self.main_window, font = self.numpadButtonFont, text = str(index), command = lambda : self.append_message(str(index)))
+        global button_color
+        return tkinter.Button(self.main_window, font = self.numpadButtonFont, bg=button_color, text = str(index), command = lambda : self.append_message(str(index)))
     def run(self):
         self.main_window.mainloop()
 
