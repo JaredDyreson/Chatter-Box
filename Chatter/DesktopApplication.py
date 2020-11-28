@@ -12,13 +12,9 @@ import select
 
 import tkinter.font
     
-<<<<<<< HEAD
 background_color = "skyblue1"
 button_color = "skyblue1"
-=======
-background_color = "pink"
-button_color = "light pink"
->>>>>>> e8afecd9004b39100b382173d1982f6e8028b7f7
+
 h1_font = "Arial"
 #text_font = tkinter.font(family='Arial', size=25)
 
@@ -30,7 +26,6 @@ class Login():
         self.window.title("Login")
         self.window.geometry("300x300")
         self.name = None
-<<<<<<< HEAD
         self.window.resizable(width = False, height = False)
         #self.window.configure(bg=background_color)
 
@@ -43,12 +38,6 @@ class Login():
 
         self.user_name_label = tkinter.Label(self.window, text="What is your name?", font=(32))
         self.user_name_label.pack(side="top", padx=50, pady=100)
-=======
-        self.window.configure(bg=background_color)
-        
-        self.user_name_label = tkinter.Label(self.window, text="Username:")
-        self.user_name_label.pack(side="top", padx=100, pady=100)
->>>>>>> e8afecd9004b39100b382173d1982f6e8028b7f7
         self.user_name_entry = tkinter.Entry(self.window)
         self.user_name_entry.pack(side="top")
         self.submit_button = tkinter.Button(self.window, text = "Submit", command = self.name_)
@@ -87,17 +76,13 @@ class NumpadWindow():
         self.equation = self.payload["question"]
 
 
-<<<<<<< HEAD
-
         main_background = tkinter.PhotoImage(file = "Chatter/assets/background.png")
         self.mbackground = tkinter.Label(self.main_window, image = main_background)
         self.mbackground.place(x = 0, y = 0, relwidth = 1, relheight = 1)
         self.mbackground.image = main_background
 
         #self.main_window.configure(bg=background_color)
-=======
-        self.main_window.configure(bg=background_color)
->>>>>>> e8afecd9004b39100b382173d1982f6e8028b7f7
+
 
         # BACKGROUND
 
@@ -143,10 +128,6 @@ class NumpadWindow():
         buttons = [self.make_button(element) for element in range(1, 10)]
         buttons.append(self.make_button(0))
 
-<<<<<<< HEAD
-     
-=======
->>>>>>> e8afecd9004b39100b382173d1982f6e8028b7f7
         self.submit_button = tkinter.Button(self.main_window, text="Submit", bg=button_color, command = self.send_func)
         self.delete_button = tkinter.Button(self.main_window, text="Delete", bg=button_color, command = self.delete_last_char)
         self.refresh_button = tkinter.Button(self.main_window, text="Refresh", bg=button_color, command = self.refresh_screen)
@@ -182,17 +163,13 @@ class NumpadWindow():
                                 )
 
     def make_button(self, index):
-<<<<<<< HEAD
         
         filepath = "Chatter/assets/button" + str(index) + ".png"
         button_image = tkinter.PhotoImage(file=filepath)
         b = tkinter.Button(self.main_window, font = self.numpadButtonFont, image=button_image, text = str(index), border=0, command = lambda : self.append_message(str(index)))
         b.image = button_image
         return b
-=======
-        global button_color
-        return tkinter.Button(self.main_window, font = self.numpadButtonFont, bg=button_color, text = str(index), command = lambda : self.append_message(str(index)))
->>>>>>> e8afecd9004b39100b382173d1982f6e8028b7f7
+
     def run(self):
         self.main_window.mainloop()
 
