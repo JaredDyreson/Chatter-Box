@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.8
 
-# from Chatter.Server import *
+from Chatter.Server import *
 
 # start_server = websockets.serve(handler, "localhost", 5000)
 
