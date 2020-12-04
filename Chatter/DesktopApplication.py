@@ -9,9 +9,11 @@ import threading
 import time
 import json
 import select
+import websocket
 
 import tkinter.font
-    
+import tkinter.messagebox
+
 background_color = "skyblue1"
 button_color = "skyblue1"
 
@@ -52,6 +54,14 @@ class Login():
             return
         self.window.destroy()
 
+class ConnectionFailed():
+    def __init__(self):
+        self.window = tkinter.Tk()
+        self.window.withdraw()
+
+    def run(self):
+        tkinter.messagebox.showerror("Connection failed", "[-] Server is not active, please turn it on")
+
 class NumpadWindow():
     def __init__(self, GameInstance, client):
 
@@ -80,17 +90,6 @@ class NumpadWindow():
         self.mbackground = tkinter.Label(self.main_window, image = main_background)
         self.mbackground.place(x = 0, y = 0, relwidth = 1, relheight = 1)
         self.mbackground.image = main_background
-
-        #self.main_window.configure(bg=background_color)
-
-
-        # BACKGROUND
-
-        # filename = tkinter.PhotoImage(file = "assets/example-resized.png")
-        # self.background = tkinter.Label(self.main_window, image = filename)
-        # self.background.place(x = 0, y = 0, relwidth = 1, relheight = 1)
-
-        # LABELS THAT CAN BE UPDATED
 
         self.timerCounter = tkinter.StringVar()
         self.timerCounter.set(f'Time: 0')
@@ -163,15 +162,20 @@ class NumpadWindow():
                                 )
 
     def make_button(self, index):
-        
-        filepath = "Chatter/assets/button" + str(index) + ".png"
+        filepath = f'Chatter/assets/button{index}.png'
+        # filepath = "Chatter/assets/button" + str(index) + ".png"
         button_image = tkinter.PhotoImage(file=filepath)
         b = tkinter.Button(self.main_window, font = self.numpadButtonFont, image=button_image, text = str(index), border=0, command = lambda : self.append_message(str(index)))
         b.image = button_image
         return b
 
     def run(self):
+        self.updater()
         self.main_window.mainloop()
+
+    def updater(self):
+        self.refresh_screen()
+        self.main_window.after(1000, self.updater)
 
     def kill(self):
         self.gameInstance.connection.close()
@@ -198,15 +202,25 @@ class NumpadWindow():
         }
         payload = json.loads(self.gameInstance.connection.recv())
         dumped = json.dumps(outbound)
-        self.gameInstance.connection.send(dumped)
-        # time.sleep(int(payload["time_out"]))
-        # response = self.gameInstance.connection.recv()
+        try:
+            self.gameInstance.connection.send(dumped)
+            self.refresh_screen(can_wipe=True)
+        except BrokenPipeError:
+            print("[-] Connection has ended, re-establish connection")
 
-    def refresh_screen(self):
+            self.gameInstance.connection = self.gameInstance.establish_connection()
+
+    def refresh_screen(self, can_wipe=False):
         payload = json.loads(self.gameInstance.connection.recv())
+        if not(payload):
+            print("connection is dead Jim")
+            self.kill()
+        else:
+            print(f'Connection still active: {payload}')
         leader_board = payload["score_board"]
         win_count = 0 if not self.client.name in leader_board else leader_board[self.client.name]
         self.winningCountMessage.set(f'You have won {win_count} times')
         self.currentEquationMessage.set(f'Current equation: {payload["question"]}')
-        while(self.message):
-            self.delete_last_char()
+        if (can_wipe):
+            while(self.message):
+                self.delete_last_char()

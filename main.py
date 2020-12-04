@@ -5,15 +5,16 @@ import json
 import select
 
 import tkinter
-import Chatter.DesktopApplication
+
+# import Chatter.DesktopApplication
 import Chatter
 
 # GLOBAL VARIABLES
 
 try:
     G = Chatter.Game()
-except ConnectionRefusedError:
-    print("[-] Server is not active, please turn it on")
+except ConnectionRefusedError as error:
+    Chatter.DesktopApplication.ConnectionFailed().run()
     quit()
 
 L = Chatter.DesktopApplication.Login()
@@ -22,10 +23,9 @@ L.run()
 client = Chatter.Client(L.name)
 print(f'Client created with name of {client.name}')
 
-
 N = Chatter.DesktopApplication.NumpadWindow(G, client)
 
 try:
     N.run()
-except KeyboardInterrupt:
-    N.kill()
+except Exception as error:
+    print(error)
