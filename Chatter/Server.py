@@ -15,8 +15,6 @@ import threading
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import time
 
-from Chatter.Equations import Generator
-
 class ClientPayload(object):
     def __init__(self, name, answer):
         self.name = name
@@ -49,9 +47,8 @@ def equation() -> str:
 def check(answer: int, expression: str) -> bool:
     return (answer == eval(expression))
 
-EquationGenerator = Generator()
 connected = set()
-e = EquationGenerator.equation()
+e = equation()
 timer = 30
 scoreBoard = {}
 winner = None
@@ -69,7 +66,7 @@ async def counter():
         for ws in connected:
             await ws.send(json.dumps(serverPayload.__dict__))
     else:
-        e = EquationGenerator.equation()
+        e = equation()
         timer = 30
         serverPayload = serverPayload = ServerPayload(game_state = False, question = e, time_out = timer, winner = winner,  score_board = scoreBoard)
         for ws in connected:
@@ -87,11 +84,11 @@ async def handler(websocket, path):
         await websocket.send(json.dumps(serverPayload.__dict__))
         async for message in websocket:
             clientPayload = ClientPayload(**json.loads(message))
-            if(EquationGenerator.check(int(clientPayload.answer), e)):
+            if(check(int(clientPayload.answer), e)):
             # if(int(clientPayload.answer) == eval(e)):
                 scoreBoard.update({clientPayload.name: scoreBoard.get(clientPayload.name, 0) + 1})
                 winner = clientPayload.name
-                e = EquationGenerator.equation()
+                e = equation()
                 timer = 30
                 serverPayload = ServerPayload(game_state = True, question = e, time_out = timer, winner = clientPayload.name, score_board = scoreBoard)
                 for ws in connected:
