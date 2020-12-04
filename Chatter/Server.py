@@ -85,7 +85,9 @@ async def handler(websocket, path):
         await websocket.send(json.dumps(serverPayload.__dict__))
         async for message in websocket:
             clientPayload = ClientPayload(**json.loads(message))
-            if(int(clientPayload.answer) == eval(e)):
+            if(clientPayload.answer == eval(e)):
+                print("PENIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                time.sleep(10)
                 scoreBoard.update({clientPayload.name: scoreBoard.get(clientPayload.name, 0) + 1})
                 winner = clientPayload.name
                 e = equation()
@@ -97,12 +99,8 @@ async def handler(websocket, path):
                 await websocket.send(json.dumps(serverPayload.__dict__))
 
     finally:
-        try:
-            connected.remove(websocket)
-            scoreBoard.pop(websocket)
-        except Exception as error:
-            print("lol, fuck these errors: ")
-            print(error)
+        connected.remove(websocket)
+        scoreBoard.pop(websocket)
 
 
 

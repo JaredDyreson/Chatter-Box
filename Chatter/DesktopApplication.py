@@ -215,9 +215,10 @@ class NumpadWindow():
         if not(payload):
             print("connection is dead Jim")
             self.kill()
-        else:
-            print(f'Connection still active: {payload}')
+        # else:
+            # print(f'Connection still active: {payload}')
         leader_board = payload["score_board"]
+        self.timerCounter.set(f'Time: {payload["time_out"]}')
         win_count = 0 if not self.client.name in leader_board else leader_board[self.client.name]
         self.winningCountMessage.set(f'You have won {win_count} times')
         self.currentEquationMessage.set(f'Current equation: {payload["question"]}')

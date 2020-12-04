@@ -24,19 +24,13 @@ setup(
     long_description=long_description,
     author='Jared Dyreson, Peyman Dinani, Kevin Durate',
     author_email='jareddyreson@csu.fullerton.edu',
-    url='https://github.com/JaredDyreson/',
+    url='https://github.com/JaredDyreson/Chatter-Box', # TODO
     license='GNU GPL-3.0',
     packages=[PKG_NAME],
     install_requires = [
-      'beautifulsoup4',
-      'colored',
-      'lxml',
-      'natsort',
-      'requests',
-      'rply',
-      'termcolor'
+      'websocket-client'
     ],
     include_package_data=True,
-    classifiers=['Programming Language :: Python :: 3.8']
+    classifiers=['Programming Language :: Python :: 3.9']
 )
 
