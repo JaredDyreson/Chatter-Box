@@ -25,3 +25,5 @@ try:
     MathGameWindow.run()
 except KeyboardInterrupt:
     quit()
+except Exception as error:
+    print (error)
