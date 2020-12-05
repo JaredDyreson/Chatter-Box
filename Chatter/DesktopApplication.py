@@ -145,7 +145,7 @@ class NumpadWindow():
                                  width = self.numpadButtonWidth,
                                  height = self.numpadButtonHeight
                                 )
-        self.delete_button.place(x = self.numpadButtonWidth,
+        self.delete_button.place(x = self.numpadButtonWidth * 2,
                                  y = self.numpadVerticalOffset + self.numpadButtonHeight * (y_pos + 1),
                                  width = self.numpadButtonWidth,
                                  height = self.numpadButtonHeight
