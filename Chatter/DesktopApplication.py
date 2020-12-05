@@ -18,9 +18,6 @@ background_color = "skyblue1"
 button_color = "skyblue1"
 
 h1_font = "Arial"
-#text_font = tkinter.font(family='Arial', size=25)
-
-
 
 class Login():
     def __init__(self):
@@ -129,8 +126,6 @@ class NumpadWindow():
 
         self.submit_button = tkinter.Button(self.main_window, text="Submit", bg=button_color, command = self.send_func)
         self.delete_button = tkinter.Button(self.main_window, text="Delete", bg=button_color, command = self.delete_last_char)
-        self.refresh_button = tkinter.Button(self.main_window, text="Refresh", bg=button_color, command = self.refresh_screen)
-
         x_pos, y_pos = 0, 0
         for x, button in enumerate(buttons):
             if(x % 3 == 0 and x > 0):
@@ -151,11 +146,6 @@ class NumpadWindow():
                                  height = self.numpadButtonHeight
                                 )
         self.delete_button.place(x = self.numpadButtonWidth,
-                                 y = self.numpadVerticalOffset + self.numpadButtonHeight * (y_pos + 1),
-                                 width = self.numpadButtonWidth,
-                                 height = self.numpadButtonHeight
-                                )
-        self.refresh_button.place(x = self.numpadButtonWidth * 2,
                                  y = self.numpadVerticalOffset + self.numpadButtonHeight * (y_pos + 1),
                                  width = self.numpadButtonWidth,
                                  height = self.numpadButtonHeight
@@ -215,8 +205,6 @@ class NumpadWindow():
         if not(payload):
             print("connection is dead Jim")
             self.kill()
-        # else:
-            # print(f'Connection still active: {payload}')
         leader_board = payload["score_board"]
         self.timerCounter.set(f'Time: {payload["time_out"]}')
         win_count = 0 if not self.client.name in leader_board else leader_board[self.client.name]
