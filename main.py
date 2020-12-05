@@ -1,25 +1,25 @@
 import socket
 import tkinter
 
-import Chatter
+import MathGames
 
 
 try:
-    MathGameInstance = Chatter.Game()
+    MathGameInstance = MathGames.Game()
 except ConnectionRefusedError as error:
-    Chatter.DesktopApplication.ConnectionFailed().run()
+    MathGames.DesktopApplication.ConnectionFailed().run()
     quit()
 
-LoginPortal = Chatter.DesktopApplication.Login()
+LoginPortal = MathGames.DesktopApplication.Login()
 LoginPortal.run()
 
 try:
-    client = Chatter.Client(LoginPortal.name)
+    client = MathGames.Client(LoginPortal.name)
     print(f'Client created with name of {client.name}')
 except ValueError:
     quit()
 
-MathGameWindow = Chatter.DesktopApplication.NumpadWindow(MathGameInstance, client)
+MathGameWindow = MathGames.DesktopApplication.NumpadWindow(MathGameInstance, client)
 
 try:
     MathGameWindow.run()

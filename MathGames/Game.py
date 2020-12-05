@@ -1,5 +1,5 @@
-from Chatter.Client import Client
-from Chatter.Equations import Generator
+from MathGames.Client import Client
+from MathGames.Equations import Generator
 
 import asyncio
 import websocket

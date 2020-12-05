@@ -1,5 +1,5 @@
 """
-Desktop application components for Chatter Box
+Desktop application components for MathGames Box
 Use as an import
 """
 
@@ -29,7 +29,7 @@ class Login():
         #self.window.configure(bg=background_color)
 
 
-        login_background = tkinter.PhotoImage(file = "Chatter/assets/login.png")
+        login_background = tkinter.PhotoImage(file = "MathGames/assets/login.png")
         self.background = tkinter.Label(self.window, image = login_background)
         self.background.place(x = 0, y = 0, relwidth = 1, relheight = 1)
         self.background.image = login_background
@@ -83,7 +83,7 @@ class NumpadWindow():
         self.equation = self.payload["question"]
 
 
-        main_background = tkinter.PhotoImage(file = "Chatter/assets/background.png")
+        main_background = tkinter.PhotoImage(file = "MathGames/assets/background.png")
         self.mbackground = tkinter.Label(self.main_window, image = main_background)
         self.mbackground.place(x = 0, y = 0, relwidth = 1, relheight = 1)
         self.mbackground.image = main_background
@@ -152,8 +152,8 @@ class NumpadWindow():
                                 )
 
     def make_button(self, index):
-        filepath = f'Chatter/assets/button{index}.png'
-        # filepath = "Chatter/assets/button" + str(index) + ".png"
+        filepath = f'MathGames/assets/button{index}.png'
+        # filepath = "MathGames/assets/button" + str(index) + ".png"
         button_image = tkinter.PhotoImage(file=filepath)
         b = tkinter.Button(self.main_window, font = self.numpadButtonFont, image=button_image, text = str(index), border=0, command = lambda : self.append_message(str(index)))
         b.image = button_image
