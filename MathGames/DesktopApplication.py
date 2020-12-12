@@ -185,6 +185,11 @@ class NumpadWindow():
     def send_func(self):
         if not(self.message):
             return
+        try:
+            _ = int(self.message)
+        except ValueError:
+            return
+
         outbound = {
             "name": self.client.name,
             "answer": self.message
