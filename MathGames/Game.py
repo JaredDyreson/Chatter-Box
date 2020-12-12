@@ -8,9 +8,6 @@ import json
 SERVER_IP = "144.202.127.25"
 SERVER_PORT = 8080
 
-# SERVER_IP = "localhost"
-# SERVER_PORT = 8080
-
 class Game():
     def __init__(self, url=SERVER_IP, port=SERVER_PORT, wait_time=15):
         if not(isinstance(url, str) and

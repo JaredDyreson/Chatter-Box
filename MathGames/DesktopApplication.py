@@ -153,7 +153,6 @@ class NumpadWindow():
 
     def make_button(self, index):
         filepath = f'MathGames/assets/button{index}.png'
-        # filepath = "MathGames/assets/button" + str(index) + ".png"
         button_image = tkinter.PhotoImage(file=filepath)
         b = tkinter.Button(self.main_window, font = self.numpadButtonFont, image=button_image, text = str(index), border=0, command = lambda : self.append_message(str(index)))
         b.image = button_image
@@ -202,14 +201,13 @@ class NumpadWindow():
 
     def refresh_screen(self, can_wipe=False):
         payload = json.loads(self.gameInstance.connection.recv())
-        if not(payload):
-            print("connection is dead Jim")
-            self.kill()
+        print(payload)
         leader_board = payload["score_board"]
         self.timerCounter.set(f'Time: {payload["time_out"]}')
         win_count = 0 if not self.client.name in leader_board else leader_board[self.client.name]
         self.winningCountMessage.set(f'You have won {win_count} times')
         self.currentEquationMessage.set(f'Current equation: {payload["question"]}')
+
         if (can_wipe):
             while(self.message):
                 self.delete_last_char()

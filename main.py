@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.8
+
 import socket
 import tkinter
 
@@ -5,7 +7,7 @@ import MathGames
 
 
 try:
-    MathGameInstance = MathGames.Game()
+    MathGameInstance = MathGames.Game(url="localhost", port=8080)
 except ConnectionRefusedError as error:
     MathGames.DesktopApplication.ConnectionFailed().run()
     quit()
@@ -25,5 +27,3 @@ try:
     MathGameWindow.run()
 except KeyboardInterrupt:
     quit()
-except Exception as error:
-    print (error)
