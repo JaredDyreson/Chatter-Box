@@ -13,11 +13,13 @@ import websocket
 
 import tkinter.font
 import tkinter.messagebox
+from MathGames.Mixer import Mixer
 
 background_color = "skyblue1"
 button_color = "skyblue1"
 
 h1_font = "Arial"
+prev_score = 0
 
 class Login():
     def __init__(self):
@@ -26,8 +28,6 @@ class Login():
         self.window.geometry("300x300")
         self.name = None
         self.window.resizable(width = False, height = False)
-        #self.window.configure(bg=background_color)
-
 
         login_background = tkinter.PhotoImage(file = "MathGames/assets/login.png")
         self.background = tkinter.Label(self.window, image = login_background)
@@ -150,6 +150,10 @@ class NumpadWindow():
                                  width = self.numpadButtonWidth,
                                  height = self.numpadButtonHeight
                                 )
+        self.previous_leaderboard = json.loads(self.gameInstance.connection.recv())["score_board"]
+        self.music = Mixer()
+        self.did_win = None
+        self.can_make_sound = False
 
     def make_button(self, index):
         filepath = f'MathGames/assets/button{index}.png'
@@ -198,6 +202,14 @@ class NumpadWindow():
         dumped = json.dumps(outbound)
         try:
             self.gameInstance.connection.send(dumped)
+            self.did_win = eval(self.equation) == int(self.message)
+            if(self.did_win):
+                self.music.playHappy()
+                print("you got it!")
+            else:
+                self.music.playSad()
+                print("uh oh!")
+            self.did_win = False
             self.refresh_screen(can_wipe=True)
         except BrokenPipeError:
             print("[-] Connection has ended, re-establish connection")
@@ -205,13 +217,17 @@ class NumpadWindow():
             self.gameInstance.connection = self.gameInstance.establish_connection()
 
     def refresh_screen(self, can_wipe=False):
+        if not(self.message):
+            self.can_make_sound = False
         payload = json.loads(self.gameInstance.connection.recv())
         print(payload)
         leader_board = payload["score_board"]
         self.timerCounter.set(f'Time: {payload["time_out"]}')
         win_count = 0 if not self.client.name in leader_board else leader_board[self.client.name]
+
+        self.equation = payload["question"]
         self.winningCountMessage.set(f'You have won {win_count} times')
-        self.currentEquationMessage.set(f'Current equation: {payload["question"]}')
+        self.currentEquationMessage.set(f'Current equation: {self.equation}')
 
         if (can_wipe):
             while(self.message):
