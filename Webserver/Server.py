@@ -13,6 +13,7 @@ import json
 import threading
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import time
+import argparse
 
 class ClientPayload(object):
     def __init__(self, name, answer):
@@ -21,7 +22,7 @@ class ClientPayload(object):
             self.answer = int(answer)
         except ValueError:
             raise ValueError(f'{self.answer} is not convertible to integer, stop.')
-        
+
 class ServerPayload(object):
     def __init__(self, game_state, question, time_out, winner, score_board: {}):
         self.game_state = game_state
@@ -36,8 +37,6 @@ logger.addHandler(logging.StreamHandler())
 os.environ['PYTHONASYNCIODEBUG'] = '1'
 logging.basicConfig(level=logging.DEBUG)
 warnings.resetwarnings()
-
-
 
 def equation() -> str:
     operators = ['+', '-']
@@ -114,7 +113,17 @@ async def handler(websocket, path):
             scheduler.shutdown()
 
 
-start_server = websockets.serve(handler, "", 8080)
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--port", type=int,
+                    help="specify the port to be set")
+
+parser.add_argument("-n", "--name", type=str,
+                    help="specify the IP address to be set")
+
+args = parser.parse_args()
+port, ip_address = args.port if args.port else 8080, args.name if args.name else ""
+
+start_server = websockets.serve(handler, ip_address, port)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
