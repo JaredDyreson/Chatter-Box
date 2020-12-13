@@ -9,6 +9,7 @@
 \usepackage{makecell}
 \usepackage{array}
 \usepackage{float}
+\usepackage{placeins}
 
 \usepackage[margin=1.4in]{geometry}
 
@@ -64,20 +65,20 @@
 
 \subsection{Purpose}
 
-The following document is the software requirements specification for CPSC362 MathGames game. 
-The document will go through the details and of purpose, implementation, and software requirements of MathGames.
+The following document contain the software requirements specified for our CPSC362 MathGames game. 
+The document will go through the detail, purpose, implementation, and software requirements of MathGames.
 
 \subsection{Scope of the problem}
 
 Learning math can be challenging at times. 
 MathGames is designed to take advantage of the internet of things to make practicing math simple, enjoyable and even competitive. 
 By utilizing easy to use and seamless networking with other MathGames users, it provides an environment to better engage the math learners. 
-MathGames distracts the players of the tedious nature of practicing math by letting players compete against each other in a seamless and enjoyable way.    
+MathGames distracts the players of the tedious nature of practicing math by letting players compete against each other in an enjoyable way.    
 
 \subsection{Intended Audience}
 
 MathGames is designed for first graders with simplicity in mind. 
-The main focus of MathGames is the easy to use and seamless connection to other MathGames players.
+The main focus of MathGames is ease of use and connecting with other MathGames players.
 
 \newpage
 
@@ -97,6 +98,17 @@ This product acts as a simple application to answer questions presented by the p
 
 This product has been tested on both Windows and Linux based operating systems.
 Intended target for server deployment is Ubuntu server, however other distributions should work out of the box with limited configuration.
+For local testing, system administrators can run the project locally and are able to connect to it that way.
+It assumed that dependencies are properly installed, please refer to  \underline{\nameref{dependencies}} for details.
+
+The steps for this are as follows:
+
+\begin{itemize}
+\item Navigate to the root folder of the MathGames project
+\item Open another console window in that current folder
+\item Run the following command to instantiate the web server "python Webserver/Server.py"
+\item After that, you can run "python main.py" in the other console window, and there should appear an interface asking for login credentials
+\end{itemize}
 
 \subsection{Similar System Information}
 
@@ -128,9 +140,12 @@ List of dependencies include:
 
 \begin{itemize}
 \item \href{https://pypi.org/project/websocket_client/}{websocket-client} | an API that interfaces with WebSocket
+\item \href{http://pyglet.org/}{pyglet} | an API that allows for the playing of audio cross-platform
 \end{itemize}
 
-These dependencies can be installed by running "pip install ." and should be handled by the system administrator.
+\label{dependencies}
+
+These dependencies can be installed by running "pip install -r requirements.txt" and should be handled by the system administrator.
 It is not expected for the end user to handle installation of dependencies.
 
 \end{flushleft}
@@ -165,6 +180,23 @@ It is not expected for the end user to handle installation of dependencies.
 \textbf{Pre-condition:} The game window has appeared to the user
 
 \textbf{Post-condition:} The user can thus begin playing.
+
+\subsection{The application shall play a happy sound and an overlay}
+
+\textbf{Description:} The game will utter a chime that indicates that the user has given the correct input.
+
+\textbf{Pre-condition:} Correct response was given
+
+\textbf{Post-condition:} Chime is played to the user and a small window is shown, displaying a happy face
+
+
+\subsection{The application shall play a sad sound and an overlay}
+
+\textbf{Description:} The game will utter a sad sound that indicates that the user has given the incorrect input.
+
+\textbf{Pre-condition:} Incorrect response was given.
+
+\textbf{Post-condition:} Sound is played and a small window is shown, displaying a frowning face.
 
 \end{flushleft}
 
@@ -214,9 +246,42 @@ There are no current security threats in the latest build of MathGames.
 \item The latest score of the user will be saved on the server as long as the server has not been reset
 \end{itemize}
 
+%\newpage
+
 \section{Interface Requirement}
 
 \subsection{GUI}
+
+The application is run typing in "./main.py" in the root of the project directory.
+A small window should appear prompting you to type in a username.
+After that, a connection is then established between the client and the server, allowing access to the game.
+The game will then begin, wherein the user can punch in their attempt at getting the right answer.
+If they are successful, there will be a splash screen telling you "good job" and a happy sound effect will play.
+Otherwise, another splash screen will appear telling you "wrong answer!" and a sad sound effect will play.
+
+\begin{figure}[hp]
+    \centering
+
+    \includegraphics[width=0.45\textwidth]{Login.PNG}
+    \caption{Login Screen}
+
+    \vspace*{\floatsep}
+
+    \includegraphics[width=0.45\textwidth]{In-Game.PNG}
+    \caption{Game Screen}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{Win.PNG}
+    \caption{Win Splash Screen}
+
+    \vspace*{\floatsep}
+
+    \includegraphics[width=0.45\textwidth]{Lose.PNG}
+    \caption{Lose Splash Screen}
+\end{figure}
+
 
 \subsection{Hardware Interface}
 
@@ -263,13 +328,19 @@ Please refer to the Operating Environment section here \underline{\nameref{marke
 \item T3: The application is not available for mobile devices, which is a problem since younger audiences use mobile devices more than personal computers. As phones become more ubiquitous than personal computers, the less market share we are able to obtain. 
 \end{itemize}
 
-\section{UML Diagram}
+\section{UML Diagrams}
 
 \subsection{Use Case Diagram}
 
+\fbox{\includegraphics[width=11cm]{UseCaseDiagram.png}}
+
 \subsection{Sequence Diagram}
 
+\fbox{\includegraphics[width=11cm]{SequenceDiagram2.png}}
+
 \subsection{Activity Diagram}
+
+\newpage
 
 \section{References}
 
