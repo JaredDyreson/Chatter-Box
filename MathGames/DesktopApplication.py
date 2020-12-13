@@ -160,6 +160,12 @@ class NumpadWindow():
         self.msplash.place(x = 0, y = 0, relwidth = 1, relheight = 1)
         self.msplash.image = main_splashscreen
         self.hide_win_screen()
+
+        loss_splashscreen = tkinter.PhotoImage(file = "MathGames/assets/loss_splash.png")
+        self.lsplash = tkinter.Label(self.main_window, image = loss_splashscreen)
+        self.lsplash.place(x = 0, y = 0, relwidth = 1, relheight = 1)
+        self.lsplash.image = loss_splashscreen
+        self.hide_loss_screen()
         
 
 
@@ -169,11 +175,22 @@ class NumpadWindow():
         self.show_win_screen()
         self.msplash.after(time, self.hide_win_screen)
 
+    def display_loss_screen(self, time=1000):
+        self.show_loss_screen()
+        self.lsplash.after(time, self.hide_loss_screen)
+
     def hide_win_screen(self):
         self.msplash.lower()
 
     def show_win_screen(self):
         self.msplash.lift()
+
+    def hide_loss_screen(self):
+        self.lsplash.lower()
+    
+    def show_loss_screen(self):
+        self.lsplash.lift()
+    
 
     def make_button(self, index):
         filepath = f'MathGames/assets/button{index}.png'
@@ -229,6 +246,7 @@ class NumpadWindow():
                 print("you got it!")
             else:
                 self.music.playSad()
+                self.display_loss_screen(1000)
                 print("uh oh!")
             self.did_win = False
             self.refresh_screen(can_wipe=True)
