@@ -200,21 +200,16 @@ class NumpadWindow():
         }
         payload = json.loads(self.gameInstance.connection.recv())
         dumped = json.dumps(outbound)
-        try:
-            self.gameInstance.connection.send(dumped)
-            self.did_win = eval(self.equation) == int(self.message)
-            if(self.did_win):
-                self.music.playHappy()
-                print("you got it!")
-            else:
-                self.music.playSad()
-                print("uh oh!")
-            self.did_win = False
-            self.refresh_screen(can_wipe=True)
-        except BrokenPipeError:
-            print("[-] Connection has ended, re-establish connection")
-
-            self.gameInstance.connection = self.gameInstance.establish_connection()
+        self.gameInstance.connection.send(dumped)
+        self.did_win = eval(self.equation) == int(self.message)
+        if(self.did_win):
+            self.music.playHappy()
+            print("you got it!")
+        else:
+            self.music.playSad()
+            print("uh oh!")
+        self.did_win = False
+        self.refresh_screen(can_wipe=True)
 
     def refresh_screen(self, can_wipe=False):
         if not(self.message):
