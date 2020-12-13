@@ -155,6 +155,26 @@ class NumpadWindow():
         self.did_win = None
         self.can_make_sound = False
 
+        main_splashscreen = tkinter.PhotoImage(file = "MathGames/assets/win_splash.png")
+        self.msplash = tkinter.Label(self.main_window, image = main_splashscreen)
+        self.msplash.place(x = 0, y = 0, relwidth = 1, relheight = 1)
+        self.msplash.image = main_splashscreen
+        self.hide_win_screen()
+        
+
+
+
+
+    def display_win_screen(self, time=1000):    
+        self.show_win_screen()
+        self.msplash.after(time, self.hide_win_screen)
+
+    def hide_win_screen(self):
+        self.msplash.lower()
+
+    def show_win_screen(self):
+        self.msplash.lift()
+
     def make_button(self, index):
         filepath = f'MathGames/assets/button{index}.png'
         button_image = tkinter.PhotoImage(file=filepath)
@@ -198,13 +218,14 @@ class NumpadWindow():
             "name": self.client.name,
             "answer": self.message
         }
-        payload = json.loads(self.gameInstance.connection.recv())
+        
         dumped = json.dumps(outbound)
         try:
             self.gameInstance.connection.send(dumped)
             self.did_win = eval(self.equation) == int(self.message)
             if(self.did_win):
                 self.music.playHappy()
+                self.display_win_screen(2000)
                 print("you got it!")
             else:
                 self.music.playSad()
@@ -215,6 +236,9 @@ class NumpadWindow():
             print("[-] Connection has ended, re-establish connection")
 
             self.gameInstance.connection = self.gameInstance.establish_connection()
+
+
+
 
     def refresh_screen(self, can_wipe=False):
         if not(self.message):
