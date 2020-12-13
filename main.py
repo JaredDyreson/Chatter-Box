@@ -7,7 +7,7 @@ import MathGames
 
 
 try:
-    MathGameInstance = MathGames.Game(url="144.202.127.25", port=8080)
+    MathGameInstance = MathGames.Game(url="localhost", port=8080)
 except ConnectionRefusedError as error:
     MathGames.DesktopApplication.ConnectionFailed().run()
     quit()
