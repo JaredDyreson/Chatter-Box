@@ -9,6 +9,7 @@
 \usepackage{makecell}
 \usepackage{array}
 \usepackage{float}
+\usepackage{placeins}
 
 \usepackage[margin=1.4in]{geometry}
 
@@ -98,6 +99,7 @@ This product acts as a simple application to answer questions presented by the p
 This product has been tested on both Windows and Linux based operating systems.
 Intended target for server deployment is Ubuntu server, however other distributions should work out of the box with limited configuration.
 For local testing, system administrators can run the project locally and are able to connect to it that way.
+It assumed that dependencies are properly installed, please refer to  \underline{\nameref{dependencies}} for details.
 
 The steps for this are as follows:
 
@@ -141,7 +143,9 @@ List of dependencies include:
 \item \href{http://pyglet.org/}{pyglet} | an API that allows for the playing of audio cross-platform
 \end{itemize}
 
-These dependencies can be installed by running "pip install websocket-client pyglet" and should be handled by the system administrator.
+\label{dependencies}
+
+These dependencies can be installed by running "pip install -r requirements.txt" and should be handled by the system administrator.
 It is not expected for the end user to handle installation of dependencies.
 
 \end{flushleft}
@@ -242,13 +246,42 @@ There are no current security threats in the latest build of MathGames.
 \item The latest score of the user will be saved on the server as long as the server has not been reset
 \end{itemize}
 
-\newpage
+%\newpage
 
 \section{Interface Requirement}
 
 \subsection{GUI}
 
-The application is run typing in "./main.py" in the root of the project directory
+The application is run typing in "./main.py" in the root of the project directory.
+A small window should appear prompting you to type in a username.
+After that, a connection is then established between the client and the server, allowing access to the game.
+The game will then begin, wherein the user can punch in their attempt at getting the right answer.
+If they are successful, there will be a splash screen telling you "good job" and a happy sound effect will play.
+Otherwise, another splash screen will appear telling you "wrong answer!" and a sad sound effect will play.
+
+\begin{figure}[hp]
+    \centering
+
+    \includegraphics[width=0.45\textwidth]{Login.PNG}
+    \caption{Login Screen}
+
+    \vspace*{\floatsep}
+
+    \includegraphics[width=0.45\textwidth]{In-Game.PNG}
+    \caption{Game Screen}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{Win.PNG}
+    \caption{Win Splash Screen}
+
+    \vspace*{\floatsep}
+
+    \includegraphics[width=0.45\textwidth]{Lose.PNG}
+    \caption{Lose Splash Screen}
+\end{figure}
+
 
 \subsection{Hardware Interface}
 

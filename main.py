@@ -4,33 +4,28 @@ import socket
 import tkinter
 
 import MathGames
-import Webserver.Server as Server
+# import Webserver.Server as Server
 import threading
 import time
 
-def gameOn():
-    time.sleep(2)
-    try:
-        MathGameInstance = MathGames.Game(url="localhost", port=8080)
-    except ConnectionRefusedError as error:
-        MathGames.DesktopApplication.ConnectionFailed().run()
-        quit()
+try:
+    MathGameInstance = MathGames.Game(url="144.202.127.25", port=8080)
+except ConnectionRefusedError as error:
+    MathGames.DesktopApplication.ConnectionFailed().run()
+    quit()
 
-    LoginPortal = MathGames.DesktopApplication.Login()
-    LoginPortal.run()
+LoginPortal = MathGames.DesktopApplication.Login()
+LoginPortal.run()
 
-    try:
-        client = MathGames.Client(LoginPortal.name)
-        print(f'Client created with name of {client.name}')
-    except ValueError:
-        quit()
+try:
+    client = MathGames.Client(LoginPortal.name)
+    print(f'Client created with name of {client.name}')
+except ValueError:
+    quit()
 
-    MathGameWindow = MathGames.DesktopApplication.NumpadWindow(MathGameInstance, client)
+MathGameWindow = MathGames.DesktopApplication.NumpadWindow(MathGameInstance, client)
 
-    try:
-        MathGameWindow.run()
-    except KeyboardInterrupt:
-        quit()
-
-threading.Thread(target=Server.run).start()
-threading.Thread(target=gameOn).start()
+try:
+    MathGameWindow.run()
+except KeyboardInterrupt:
+    quit()
