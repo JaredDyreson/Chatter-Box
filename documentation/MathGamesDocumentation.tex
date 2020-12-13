@@ -13,9 +13,13 @@
 
 \usepackage[margin=1.4in]{geometry}
 
-\title{SRS Documentation| MathGames CS-362}
+\title{Software Requirements Specification}
 \author{Jared Dyreson, Peyman Dinani, Kevin Durate \\
-        California State University, Fullerton}
+        CPSC 362  \\
+        Professor: Dr. Lidia Morrison \\
+        Department of Computer Science  \\
+        California State University, Fullerton \\
+        Fall 2020}
 \date
 
 \usepackage [english]{babel}
@@ -158,7 +162,7 @@ It is not expected for the end user to handle installation of dependencies.
 
 \subsection{The app shall display a login page}
 
-\textbf{Description:} upon clicking the "main.py" file in the root of the project directory, two different windows can appear. If there are no errors with establishing a connection to the server, it will prompt them for their name. Else, it will cease execution and inform the user to enable the server.
+\textbf{Description:} Upon clicking the "main.py" file in the root of the project directory, two different windows can appear. If there are no errors with establishing a connection to the server, it shall prompt them for their name. Else, it shall cease execution and inform the user to enable the server.
 
 \textbf{Pre-condition:} User has downloaded MathGames.
 
@@ -171,11 +175,11 @@ It is not expected for the end user to handle installation of dependencies.
 
 \textbf{Pre-condition:} User has entered the correct information in the login screen
 
-\textbf{Post-condition:} The user will be greeted with the game window
+\textbf{Post-condition:} The user shall be greeted with the game window
 
 \subsection{The application shall display the game screen}
 
-\textbf{Description:} The game will begin and the user can select input to send to the server
+\textbf{Description:} The game shall begin and the user can select input to send to the server
 
 \textbf{Pre-condition:} The game window has appeared to the user
 
@@ -183,20 +187,20 @@ It is not expected for the end user to handle installation of dependencies.
 
 \subsection{The application shall play a happy sound and an overlay}
 
-\textbf{Description:} The game will utter a chime that indicates that the user has given the correct input.
+\textbf{Description:} The game shall utter a chime that indicates that the user has given the correct input.
 
 \textbf{Pre-condition:} Correct response was given
 
-\textbf{Post-condition:} Chime is played to the user and a small window is shown, displaying a happy face
+\textbf{Post-condition:} Chime is played to the user and a small window is shown, displaying a happy message
 
 
 \subsection{The application shall play a sad sound and an overlay}
 
-\textbf{Description:} The game will utter a sad sound that indicates that the user has given the incorrect input.
+\textbf{Description:} The game shall utter a sad sound that indicates that the user has given the incorrect input.
 
 \textbf{Pre-condition:} Incorrect response was given.
 
-\textbf{Post-condition:} Sound is played and a small window is shown, displaying a frowning face.
+\textbf{Post-condition:} Sound is played and a small window is shown, displaying a sad message.
 
 \end{flushleft}
 
@@ -208,11 +212,11 @@ It is not expected for the end user to handle installation of dependencies.
 \begin{tabular}{@{}|l|l|@{}}
 \toprule
 \textbf{Quality Attribute} & \textbf{Brief Description} \\ \midrule
-RT-1 & \makecell{The game will respond to server availability based \\ on the quality of internet connection.} \\ \midrule
-RT-1 & \makecell{The game will show an error/ notify user if the server is not \\ available within seconds of launching.} \\ \midrule
-SS-1 & \makecell{The game will ask the player name right after \\ launching and checking for server availability.} \\ \midrule
-SA-1 & The game will be available as long as the server is up and running. \\ \midrule
-AC-1 & \makecell{The game will be accessible by windows or mac computers with \\ python installed and internet connectivity}. \\ \bottomrule
+RT-1 & \makecell{The game shall respond to server availability based \\ on the quality of internet connection.} \\ \midrule
+RT-1 & \makecell{The game shall show an error/ notify user if the server is not \\ available within seconds of launching.} \\ \midrule
+SS-1 & \makecell{The game shall ask the player name right after \\ launching and checking for server availability.} \\ \midrule
+SA-1 & The game shall be available as long as the server is up and running. \\ \midrule
+AC-1 & \makecell{The game shall be accessible by Windows or Mac computers with \\ Python installed and internet connectivity}. \\ \bottomrule
 \end{tabular}
 \end{table}
 
@@ -283,6 +287,14 @@ Otherwise, another splash screen will appear telling you "wrong answer!" and a s
 \end{figure}
 
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{connection-failed.PNG}
+    \caption{Connection Failed Screen}
+
+\end{figure}
+
+
 \subsection{Hardware Interface}
 
 This application is expected to be used on a desktop computer that has an Ethernet connection.
@@ -340,7 +352,7 @@ Please refer to the Operating Environment section here \underline{\nameref{marke
 
 \subsection{Activity Diagram}
 
-\newpage
+\fbox{\includegraphics[width=11cm]{activityDiagram.png}}
 
 \section{References}
 
