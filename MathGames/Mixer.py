@@ -20,15 +20,10 @@ class Mixer:
             process.join()
 
     def playHappy(self):
-        self.playJingle(self.playHappy_)
+        self.happySound = pyglet.resource.media(f'{self.basedir}/sliced-yay-sound-effec.mp3')
+        self.happySound.play()
+        
 
     def playSad(self):
-        self.playJingle(self.playSad_)
-
-    def playHappy_(self):
-        self.happySound.play()
-        pyglet.app.run()
-
-    def playSad_(self):
+        self.sadSound = pyglet.resource.media(f'{self.basedir}/aww-sound-effect.mp3')
         self.sadSound.play()
-        pyglet.app.run()
